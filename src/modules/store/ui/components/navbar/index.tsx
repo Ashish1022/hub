@@ -34,7 +34,7 @@ const Navbar = async () => {
                     <Link href='https://zerocart.vercel.app'>
                         <p className='flex gap-2 hover:border-b border-white text-sm cursor-pointer items-center'>
                             <SquareArrowOutUpRight className='size-4' />
-                            Visit your store
+                            Visit
                         </p>
                     </Link>
                     <UserButton afterSwitchSessionUrl='/' />
