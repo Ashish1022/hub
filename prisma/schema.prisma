@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Store {
+  id     String @id @default(uuid())
+  name   String
+  userId String
+
+  collections Collection[] @relation("StoreToCollection")
+  categories  Category[]   @relation("StoreToCategory")
+  products    Product[]    @relation("StoreToProduct")
+  orders      Orders[]     @relation("StoreToOrder")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Collection {
+  id             String     @id @default(uuid())
+  storeId        String
+  store          Store      @relation("StoreToCollection", fields: [storeId], references: [id])
+  label          String
+  handle         String     @unique
+  categories     Category[]
+  products       Product[]  @relation("CollectionToProduct")
+  seoTitle       String
+  seoDescription String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model Category {
+  id             String        @id @default(uuid())
+  storeId        String
+  store          Store         @relation("StoreToCategory", fields: [storeId], references: [id])
+  collectionId   String
+  collection     Collection    @relation(fields: [collectionId], references: [id])
+  name           String
+  handle         String        @unique
+  products       Product[]     @relation("CategoryToProduct")
+  subcategories  Subcategory[] @relation("CategoryToSubcategory")
+  seoTitle       String
+  seoDescription String
+  // tags           Tag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([collectionId])
+  @@index([storeId])
+}
+
+model Subcategory {
+  id             String    @id @default(uuid())
+  categoryId     String
+  category       Category  @relation("CategoryToSubcategory", fields: [categoryId], references: [id])
+  name           String
+  products       Product[] @relation("SubcategoryToProduct")
+  seoTitle       String
+  seoDescription String
+  // tags           Tag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+model Product {
+  id             String       @id @default(uuid())
+  storeId        String
+  store          Store        @relation("StoreToProduct", fields: [storeId], references: [id])
+  categoryId     String
+  category       Category     @relation("CategoryToProduct", fields: [categoryId], references: [id])
+  subcategoryId  String
+  subcategory    Subcategory? @relation("SubcategoryToProduct", fields: [subcategoryId], references: [id])
+  name           String
+  description    String
+  handle         String       @unique
+  price          Decimal
+  isFeatured     Boolean      @default(false)
+  isArchived     Boolean      @default(false)
+  collectionId   String
+  collection     Collection   @relation("CollectionToProduct", fields: [collectionId], references: [id])
+  images         Image[]
+  seoTitle       String
+  seoDescription String
+  tags           Tags[]
+  OrderItem      OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([subcategoryId])
+  @@index([collectionId])
+}
+
+model Image {
+  id        String  @id @default(uuid())
+  url       String
+  type      String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model Tags {
+  id        String  @id @default(uuid())
+  tag       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model Customer {
+  id             String   @id @default(uuid())
+  orders         Orders[] @relation("CustomerToOrder")
+  emailphone     String
+  shouldNotified Boolean
+  firstname      String
+  lastname       String
+  address        String
+  city           String
+  state          String
+  apartment      String
+  pin            String
+  country        String   @default("India")
+  feedback       String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Orders {
+  id         String      @id @default(uuid())
+  storeId    String
+  store      Store       @relation("StoreToOrder", references: [id], fields: [storeId])
+  orderItems OrderItem[]
+  customerId String
+  customer   Customer    @relation("CustomerToOrder", references: [id], fields: [customerId])
+  isPaid     Boolean     @default(false)
+  phone      String      @default("")
+  address    String      @default("")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([storeId])
+  @@index([customerId])
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Orders  @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@index([orderId])
+}
