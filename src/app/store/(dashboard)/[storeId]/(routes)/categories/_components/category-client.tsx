@@ -18,7 +18,7 @@ const CategoryClient = ({ data }: { data: CategoryColumn[] }) => {
       <div className='flex items-center justify-between'>
         <Heading title={`Categories (${data.length})`} description='Manage categories for your store.' />
         <Button onClick={() => router.push(`/store/${params.storeId}/categories/new`)}>
-          <Plus className='w-4 h-4 mr-2' />
+          <Plus className='w-4 h-4 md:mr-2 mr-1' />
           Add new
         </Button>
       </div>

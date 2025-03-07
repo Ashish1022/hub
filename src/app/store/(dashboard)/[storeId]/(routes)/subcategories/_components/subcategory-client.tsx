@@ -17,14 +17,14 @@ const SubCategoryClient = ({ data }: { data: SubCategoryColumn[] }) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={`Sub Categories (${data.length})`} description='Manage sub categories for your store.' />
+        <Heading title={`Subcategories (${data.length})`} description='Manage sub categories for your store.' />
         <Button onClick={() => router.push(`/store/${params.storeId}/subcategories/new`)}>
-          <Plus className='w-4 h-4 mr-2' />
+          <Plus className='w-4 h-4 md:mr-2 mr-1' />
           Add new
         </Button>
       </div>
       <Separator />
-      <DataTable columns={columns} data={data} searchKey={['name','categoryName']} />
+      <DataTable columns={columns} data={data} searchKey={['name', 'categoryName']} />
       <Heading title='API' description='API calls for sub categories.' />
       <Separator />
       <ApiList entityName='subcategories' entityIdName='subcategoryId' />

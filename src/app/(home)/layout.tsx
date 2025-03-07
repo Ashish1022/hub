@@ -4,7 +4,11 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation';
 import React from 'react'
 
-const Layout = async ({ children }: { children: React.ReactNode }) => {
+const Layout = async ({
+    children
+}: {
+    children: React.ReactNode
+}) => {
 
     const { userId } = await auth();
 

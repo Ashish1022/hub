@@ -24,10 +24,6 @@ export const columns: ColumnDef<CollectionColumn>[] = [
         header: "seoTitle",
     },
     {
-        accessorKey: "seoDescription",
-        header: "seoDescription",
-    },
-    {
         accessorKey: "createdAt",
         header: "Date",
     },

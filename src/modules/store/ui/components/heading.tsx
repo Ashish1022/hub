@@ -3,8 +3,8 @@ import React from 'react'
 const Heading = ({ title, description }: { title: string; description: string }) => {
     return (
         <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{title}</h2>
-            <p className='text-sm text-muted-foreground'>{description}</p>
+            <h2 className='md:text-2xl text-xl font-bold tracking-tight'>{title}</h2>
+            <p className='md:text-sm text-xs text-muted-foreground'>{description}</p>
         </div>
     )
 }

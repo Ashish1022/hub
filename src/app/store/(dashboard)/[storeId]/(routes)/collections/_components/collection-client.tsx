@@ -20,7 +20,7 @@ const CollectionClient = ({ data }: { data: CollectionColumn[] }) => {
       <div className='flex items-center justify-between'>
         <Heading title={`Collections (${data.length})`} description='Manage collections for your store' />
         <Button onClick={() => router.push(`/store/${params.storeId}/collections/new`)}>
-          <Plus className='w-4 h-4 mr-2' />
+          <Plus className='w-4 h-4 md:mr-2 mr-1' />
           Add new
         </Button>
       </div>
