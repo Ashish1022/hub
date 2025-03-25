@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Globe, Laptop, LayoutGrid, Menu, Server, ShieldCheck, Sparkles, X, Zap } from "lucide-react"
+import { CheckCircle, Globe, Laptop, LayoutGrid, Server, ShieldCheck, Sparkles, Zap } from "lucide-react"
 import Header from "@/components/header"
 
 
@@ -24,7 +24,7 @@ export default function LandingPage() {
       <div className="fixed bottom-1/4 right-1/4 w-96 h-96 rounded-full border border-[#00FFD1]/20 animate-[spin_30s_linear_infinite_reverse] pointer-events-none"></div>
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-[#FF3D00]/10 animate-[spin_40s_linear_infinite] pointer-events-none"></div>
 
-      <Header/>
+      <Header />
 
       {/* Hero Section */}
       <section className="container mx-auto py-20 px-4 md:px-6 relative z-10">
