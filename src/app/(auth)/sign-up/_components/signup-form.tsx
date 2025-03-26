@@ -1,58 +1,29 @@
-"use client"
+interface SignUpFormProps {
+    signUpWithEmail: ({ emailAddress, password }: { emailAddress: string, password: string }) => void
+    clerkError: string
+}
 
-import Link from "next/link"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Globe, EyeOff, Eye } from "lucide-react"
-import { useSignIn } from "@clerk/nextjs"
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Eye, EyeOff, Globe } from 'lucide-react'
+import Link from 'next/link'
+import React, { useState } from 'react'
 
-export default function LoginPage() {
-    const { signIn, isLoaded } = useSignIn();
-    const [email, setEmail] = useState("");
+const SignupForm = ({ signUpWithEmail, clerkError }: SignUpFormProps) => {
+
     const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-
-    const handleSignIn = async () => {
-        if (!isLoaded) return;
-
-        try {
-            await signIn.create({
-                identifier: email,
-                password,
-            });
-            window.location.href = "/dashboard";
-        } catch (err) {
-            setError("Invalid credentials");
-        }
-    };
-
-    
-
-    const handleGoogleSignIn = async () => {
-        if (!isLoaded) return;
-        await signIn.authenticateWithRedirect({
-            strategy: "oauth_google",
-            redirectUrl: "/dashboard",
-            redirectUrlComplete: ""
-        });
-    };
 
     return (
         <div className="min-h-screen bg-[#050A18] text-white flex flex-col">
-            {/* Decorative elements */}
             <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none"></div>
             <div className="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-br from-[#FF3D00]/30 via-[#FF00E5]/20 to-transparent blur-3xl opacity-40 pointer-events-none animate-pulse"></div>
             <div className="fixed bottom-0 right-0 w-full h-[500px] bg-gradient-to-tl from-[#00FFD1]/30 via-[#7000FF]/20 to-transparent blur-3xl opacity-40 pointer-events-none animate-pulse"></div>
 
-            {/* Animated shapes */}
             <div className="fixed top-1/4 left-1/4 w-64 h-64 rounded-full border border-[#FF00E5]/20 animate-[spin_20s_linear_infinite] pointer-events-none"></div>
             <div className="fixed bottom-1/4 right-1/4 w-96 h-96 rounded-full border border-[#00FFD1]/20 animate-[spin_30s_linear_infinite_reverse] pointer-events-none"></div>
 
-            {/* Header */}
             <header className="container mx-auto py-4 px-4 md:px-6 relative z-10">
                 <div className="flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2">
@@ -67,7 +38,7 @@ export default function LoginPage() {
                 </div>
             </header>
 
-            {/* Login Form */}
+
             <div className="flex-1 flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-md">
                     <div className="relative">
@@ -75,12 +46,43 @@ export default function LoginPage() {
                         <div className="relative bg-[#0A1228]/90 rounded-lg p-8 shadow-xl backdrop-blur-sm">
                             <div className="text-center mb-8">
                                 <h1 className="text-2xl font-bold bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] text-transparent bg-clip-text">
-                                    Welcome Back
+                                    Create an Account
                                 </h1>
-                                <p className="text-[#A4B8D3] mt-2">Sign in to your ZERO | HUB account</p>
+                                <p className="text-[#A4B8D3] mt-2">Join WebifyPro and start building your online presence</p>
                             </div>
+                            <form className="space-y-6" onSubmit={(e) => {
+                                e.preventDefault();
+                                const target = e.target as typeof e.target & {
+                                    email: { value: string };
+                                    password: { value: string };
+                                }
+                                const email = target.email.value;
+                                const password = target.password.value;
+                                signUpWithEmail({ emailAddress: email, password: password })
+                            }}>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="firstName" className="text-white">
+                                            First Name
+                                        </Label>
+                                        <Input
+                                            id="firstName"
+                                            placeholder="John"
+                                            className="bg-[#050A18] border-[#1E293B] focus:border-[#FF00E5] focus:ring-[#FF00E5] text-white placeholder:text-[#A4B8D3]"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="lastName" className="text-white">
+                                            Last Name
+                                        </Label>
+                                        <Input
+                                            id="lastName"
+                                            placeholder="Doe"
+                                            className="bg-[#050A18] border-[#1E293B] focus:border-[#FF00E5] focus:ring-[#FF00E5] text-white placeholder:text-[#A4B8D3]"
+                                        />
+                                    </div>
+                                </div>
 
-                            <form className="space-y-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="email" className="text-white">
                                         Email
@@ -90,28 +92,30 @@ export default function LoginPage() {
                                         type="email"
                                         placeholder="your.email@example.com"
                                         className="bg-[#050A18] border-[#1E293B] focus:border-[#FF00E5] focus:ring-[#FF00E5] text-white placeholder:text-[#A4B8D3]"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <div className="flex items-center justify-between">
-                                        <Label htmlFor="password" className="text-white">
-                                            Password
-                                        </Label>
-                                        <Link href="/forgot-password" className="text-sm text-[#FF00E5] hover:underline">
-                                            Forgot password?
-                                        </Link>
-                                    </div>
+                                    <Label htmlFor="company" className="text-white">
+                                        Company Name (Optional)
+                                    </Label>
+                                    <Input
+                                        id="company"
+                                        placeholder="Your Business"
+                                        className="bg-[#050A18] border-[#1E293B] focus:border-[#FF00E5] focus:ring-[#FF00E5] text-white placeholder:text-[#A4B8D3]"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="password" className="text-white">
+                                        Password
+                                    </Label>
                                     <div className="relative">
                                         <Input
                                             id="password"
                                             type={showPassword ? "text" : "password"}
                                             placeholder="••••••••"
                                             className="bg-[#050A18] border-[#1E293B] focus:border-[#FF00E5] focus:ring-[#FF00E5] text-white placeholder:text-[#A4B8D3] pr-10"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
                                         />
                                         <button
                                             type="button"
@@ -121,17 +125,27 @@ export default function LoginPage() {
                                             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                         </button>
                                     </div>
+                                    <p className="text-xs text-[#A4B8D3]">
+                                        Password must be at least 8 characters long with a number and a special character.
+                                    </p>
                                 </div>
 
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="remember" />
-                                    <Label htmlFor="remember" className="text-sm text-[#A4B8D3]">
-                                        Remember me for 30 days
+                                <div className="flex items-start space-x-2">
+                                    <Checkbox id="terms" className="mt-1" />
+                                    <Label htmlFor="terms" className="text-sm text-[#A4B8D3]">
+                                        I agree to the{" "}
+                                        <Link href="/terms" className="text-[#FF00E5] hover:underline">
+                                            Terms of Service
+                                        </Link>{" "}
+                                        and{" "}
+                                        <Link href="/privacy" className="text-[#FF00E5] hover:underline">
+                                            Privacy Policy
+                                        </Link>
                                     </Label>
                                 </div>
 
-                                <Button className="w-full bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] hover:opacity-90 text-white border-0 shadow-[0_0_15px_rgba(255,61,0,0.4)]" onClick={handleSignIn}>
-                                    Sign In
+                                <Button className="w-full bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] hover:opacity-90 text-white border-0 shadow-[0_0_15px_rgba(255,61,0,0.4)]" type='submit'>
+                                    Create Account
                                 </Button>
 
                                 <div className="relative">
@@ -139,12 +153,12 @@ export default function LoginPage() {
                                         <div className="w-full border-t border-[#1E293B]"></div>
                                     </div>
                                     <div className="relative flex justify-center text-xs">
-                                        <span className="bg-[#0A1228] px-2 text-[#A4B8D3]">Or continue with</span>
+                                        <span className="bg-[#0A1228] px-2 text-[#A4B8D3]">Or sign up with</span>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
-                                    <Button variant="outline" className="border-[#1E293B] text-white hover:bg-[#1E293B]/50" onClick={handleGoogleSignIn}>
+                                    <Button variant="outline" className="border-[#1E293B] text-white hover:bg-[#1E293B]/50">
                                         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                                             <path
                                                 fill="currentColor"
@@ -176,9 +190,9 @@ export default function LoginPage() {
 
                             <div className="mt-6 text-center text-sm">
                                 <p className="text-[#A4B8D3]">
-                                    Don't have an account?{" "}
-                                    <Link href="/sign-up" className="text-[#FF00E5] hover:underline font-medium">
-                                        Sign up
+                                    Already have an account?{" "}
+                                    <Link href="/login" className="text-[#FF00E5] hover:underline font-medium">
+                                        Sign in
                                     </Link>
                                 </p>
                             </div>
@@ -189,3 +203,5 @@ export default function LoginPage() {
         </div>
     )
 }
+
+export default SignupForm

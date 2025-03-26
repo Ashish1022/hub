@@ -27,9 +27,12 @@ import {
   ShoppingCart,
   Users,
 } from "lucide-react"
+import { UserButton, useUser } from "@clerk/nextjs"
 
-export default function DashboardPage() {
+export default function DashboardPage({ params }: { params: { storeId: string } }) {
+
   const [activeTab, setActiveTab] = useState("overview")
+  const { user } = useUser();
 
   return (
     <div className="min-h-screen bg-[#050A18] text-white">
@@ -47,7 +50,7 @@ export default function DashboardPage() {
               <Globe className="h-8 w-8 text-white relative z-10" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] text-transparent bg-clip-text">
-            ZERO | HUB
+              ZERO | HUB
             </span>
           </div>
 
@@ -60,7 +63,7 @@ export default function DashboardPage() {
               <span>Dashboard</span>
             </Link>
             <Link
-              href="/dashboard/analytics"
+              href={`/store/${params.storeId}/analytics`}
               className="flex items-center gap-2 px-3 py-2 rounded-md text-[#A4B8D3] hover:bg-[#1E293B] hover:text-white transition-colors"
             >
               <LineChart className="h-5 w-5" />
@@ -146,10 +149,12 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] p-[2px]">
                   <div className="w-full h-full rounded-full bg-[#0A1228] flex items-center justify-center">
-                    <span className="text-xs font-bold text-[#FF3D00]">JD</span>
+                    <span className="text-xs font-bold text-[#FF3D00] flex items-center justify-center">
+                      <UserButton />
+                    </span>
                   </div>
                 </div>
-                <span className="text-sm font-medium hidden md:inline-block">John Doe</span>
+                <span className="text-sm font-medium hidden md:inline-block">{`${user?.firstName} ${user?.lastName}`}</span>
               </div>
             </div>
           </header>
@@ -162,7 +167,7 @@ export default function DashboardPage() {
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-[#FF3D00] via-[#FF00E5] to-[#7000FF] text-transparent bg-clip-text">
                     Store Dashboard
                   </h1>
-                  <p className="text-[#A4B8D3]">Welcome back, John! Here's what's happening with your store today.</p>
+                  <p className="text-[#A4B8D3]">Welcome back, {user?.firstName}! Here's what's happening with your store today.</p>
                 </div>
 
                 <div className="flex items-center gap-2 mt-4 md:mt-0">
@@ -687,17 +692,16 @@ export default function DashboardPage() {
                         ].map((notification, i) => (
                           <div key={i} className="flex items-start gap-4 p-4 border border-[#1E293B] rounded-lg">
                             <div
-                              className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                notification.type === "order"
-                                  ? "bg-[#FF3D00]/10"
-                                  : notification.type === "inventory"
-                                    ? "bg-[#FF00E5]/10"
-                                    : notification.type === "payment"
-                                      ? "bg-[#00FFD1]/10"
-                                      : notification.type === "review"
-                                        ? "bg-[#7000FF]/10"
-                                        : "bg-[#FF3D00]/10"
-                              }`}
+                              className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${notification.type === "order"
+                                ? "bg-[#FF3D00]/10"
+                                : notification.type === "inventory"
+                                  ? "bg-[#FF00E5]/10"
+                                  : notification.type === "payment"
+                                    ? "bg-[#00FFD1]/10"
+                                    : notification.type === "review"
+                                      ? "bg-[#7000FF]/10"
+                                      : "bg-[#FF3D00]/10"
+                                }`}
                             >
                               {notification.type === "order" && <ShoppingBag className={`h-5 w-5 text-[#FF3D00]`} />}
                               {notification.type === "inventory" && <Package className={`h-5 w-5 text-[#FF00E5]`} />}
