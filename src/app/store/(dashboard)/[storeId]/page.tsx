@@ -28,6 +28,7 @@ import {
   Users,
 } from "lucide-react"
 import { UserButton, useUser } from "@clerk/nextjs"
+import Navbar from "./_components/navbar"
 
 export default function DashboardPage({ params }: { params: { storeId: string } }) {
 
@@ -53,52 +54,7 @@ export default function DashboardPage({ params }: { params: { storeId: string } 
               ZERO | HUB
             </span>
           </div>
-
-          <nav className="space-y-1 flex-1">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-2 px-3 py-2 rounded-md bg-[#FF00E5]/10 text-[#FF00E5] font-medium"
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>Dashboard</span>
-            </Link>
-            <Link
-              href={`/store/${params.storeId}/analytics`}
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-[#A4B8D3] hover:bg-[#1E293B] hover:text-white transition-colors"
-            >
-              <LineChart className="h-5 w-5" />
-              <span>Analytics</span>
-            </Link>
-            <Link
-              href="/dashboard/products"
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-[#A4B8D3] hover:bg-[#1E293B] hover:text-white transition-colors"
-            >
-              <Package className="h-5 w-5" />
-              <span>Products</span>
-            </Link>
-            <Link
-              href="/dashboard/orders"
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-[#A4B8D3] hover:bg-[#1E293B] hover:text-white transition-colors"
-            >
-              <ShoppingBag className="h-5 w-5" />
-              <span>Orders</span>
-            </Link>
-            <Link
-              href="/dashboard/customers"
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-[#A4B8D3] hover:bg-[#1E293B] hover:text-white transition-colors"
-            >
-              <Users className="h-5 w-5" />
-              <span>Customers</span>
-            </Link>
-            <Link
-              href="/dashboard/payments"
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-[#A4B8D3] hover:bg-[#1E293B] hover:text-white transition-colors"
-            >
-              <CreditCard className="h-5 w-5" />
-              <span>Payments</span>
-            </Link>
-          </nav>
-
+          <Navbar />
           <div className="pt-4 border-t border-[#1E293B] mt-6">
             <Link
               href="/dashboard/settings"
