@@ -12,9 +12,9 @@ export default function DocsPage() {
             Documentation
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-[#FF3D00] via-[#FF00E5] to-[#7000FF] text-transparent bg-clip-text">
-            WebifyPro Documentation
+          ZERO | HUB Documentation
           </h1>
-          <p className="text-xl text-[#A4B8D3]">Learn how to use WebifyPro to build and grow your online presence.</p>
+          <p className="text-xl text-[#A4B8D3]">Learn how to use ZERO | HUB to build and grow your online presence.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -28,7 +28,7 @@ export default function DocsPage() {
                 Getting Started
               </h2>
               <p className="text-[#A4B8D3] mb-4">
-                Everything you need to know to get up and running with WebifyPro quickly.
+                Everything you need to know to get up and running with ZERO | HUB quickly.
               </p>
               <ul className="space-y-2 mb-4">
                 <li>
@@ -73,7 +73,7 @@ export default function DocsPage() {
               </div>
               <h2 className="text-xl font-bold mb-2 text-white group-hover:text-[#FF00E5] transition-colors">Guides</h2>
               <p className="text-[#A4B8D3] mb-4">
-                Step-by-step guides to help you make the most of WebifyPro's features.
+                Step-by-step guides to help you make the most of ZERO | HUB's features.
               </p>
               <ul className="space-y-2 mb-4">
                 <li>
@@ -120,7 +120,7 @@ export default function DocsPage() {
                 API Reference
               </h2>
               <p className="text-[#A4B8D3] mb-4">
-                Comprehensive API documentation for developers looking to integrate with WebifyPro.
+                Comprehensive API documentation for developers looking to integrate with ZERO | HUB.
               </p>
               <ul className="space-y-2 mb-4">
                 <li>
@@ -166,7 +166,7 @@ export default function DocsPage() {
               <h2 className="text-xl font-bold mb-2 text-white group-hover:text-[#00FFD1] transition-colors">
                 Resources
               </h2>
-              <p className="text-[#A4B8D3] mb-4">Additional resources to help you get the most out of WebifyPro.</p>
+              <p className="text-[#A4B8D3] mb-4">Additional resources to help you get the most out of ZERO | HUB.</p>
               <ul className="space-y-2 mb-4">
                 <li>
                   <Link

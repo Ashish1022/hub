@@ -20,7 +20,7 @@ export function DocsSidebar({ className, ...props }: DocsSidebarProps) {
           <h2 className="mb-2 text-xl font-semibold tracking-tight bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] text-transparent bg-clip-text">
             Documentation
           </h2>
-          <p className="text-sm text-[#A4B8D3]">Learn how to use WebifyPro</p>
+          <p className="text-sm text-[#A4B8D3]">Learn how to use ZERO | HUB</p>
         </div>
         <div className="px-4 py-2">
           <Link

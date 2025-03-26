@@ -24,13 +24,13 @@ export default function IntroductionPage() {
             Getting Started
           </Badge>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] text-transparent bg-clip-text">
-            Introduction to WebifyPro
+            Introduction to ZERO | HUB
           </h1>
         </div>
 
         <div className="prose prose-invert max-w-none text-base sm:text-lg">
           <p className="text-[#A4B8D3]">
-            WebifyPro is an all-in-one platform designed to help businesses establish and grow their online presence.
+          ZERO | HUB is an all-in-one platform designed to help businesses establish and grow their online presence.
           </p>
 
           <h2 className="text-lg sm:text-xl font-bold mt-6 sm:mt-8 text-white">Key Features</h2>

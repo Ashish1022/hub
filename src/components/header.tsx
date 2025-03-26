@@ -4,11 +4,17 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { Globe, Menu, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
 
     const [menuOpen, setMenuOpen] = useState(false);
     const closeMenu = () => setMenuOpen(false);
+    const router = useRouter();
+
+    const handleClick = ()=>{
+        router.push('/store')
+    }
 
     return (
         <header className="container mx-auto py-4 px-4 md:px-6 relative z-20">
@@ -24,7 +30,7 @@ const Header = () => {
                         <Globe className="h-8 w-8 text-white relative z-10" />
                     </div>
                     <span className="text-xl font-bold bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] text-transparent bg-clip-text">
-                        WebifyPro
+                    ZERO | HUB
                     </span>
                 </Link>
 
@@ -60,7 +66,7 @@ const Header = () => {
                     <Link href="/login" className="text-sm hover:text-[#FF3D00] transition-colors">
                         Login
                     </Link>
-                    <Button className="bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] hover:opacity-90 text-white border-0 shadow-[0_0_20px_rgba(255,61,0,0.4)]">
+                    <Button className="bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] hover:opacity-90 text-white border-0 shadow-[0_0_20px_rgba(255,61,0,0.4)]" onClick={handleClick}>
                         Get Started
                     </Button>
                 </div>

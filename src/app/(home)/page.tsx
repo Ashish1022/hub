@@ -41,7 +41,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-xl text-[#A4B8D3] max-w-2xl mx-auto mb-8">
-            WebifyPro helps businesses of all sizes establish and grow their online presence with our all-in-one
+            ZERO | HUB helps businesses of all sizes establish and grow their online presence with our all-in-one
             platform. Get started in minutes, no technical skills required.
           </p>
 
@@ -600,7 +600,7 @@ export default function LandingPage() {
             What our customers say
           </h2>
           <p className="text-[#A4B8D3]">
-            Don't just take our word for it. Here's what businesses like yours have achieved with WebifyPro.
+            Don't just take our word for it. Here's what businesses like yours have achieved with ZERO | HUB.
           </p>
         </div>
 
@@ -624,7 +624,7 @@ export default function LandingPage() {
                 </div>
                 <div className="absolute top-2 right-2 text-6xl text-[#FF3D00]/10 font-serif">"</div>
                 <p className="text-[#E1E7EF]">
-                  "WebifyPro transformed our business. We went from zero online presence to a beautiful e-commerce store
+                  "ZERO | HUB transformed our business. We went from zero online presence to a beautiful e-commerce store
                   that's generating 60% of our revenue in just three months."
                 </p>
                 <div className="mt-4 flex">
@@ -692,7 +692,7 @@ export default function LandingPage() {
                 </div>
                 <div className="absolute top-2 right-2 text-6xl text-[#7000FF]/10 font-serif">"</div>
                 <p className="text-[#E1E7EF]">
-                  "As a restaurant owner, I needed a simple way to showcase our menu and accept online orders. WebifyPro
+                  "As a restaurant owner, I needed a simple way to showcase our menu and accept online orders. ZERO | HUB
                   delivered exactly what we needed, and our customers love it!"
                 </p>
                 <div className="mt-4 flex">
@@ -725,7 +725,7 @@ export default function LandingPage() {
             <div className="absolute -inset-0.5 bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
             <div className="bg-[#0A1228]/80 border border-[#1E293B] rounded-lg p-6 backdrop-blur-sm relative h-full">
               <h3 className="text-xl font-bold mb-2 text-white group-hover:text-[#FF3D00] transition-colors">
-                Do I need technical skills to use WebifyPro?
+                Do I need technical skills to use ZERO | HUB?
               </h3>
               <p className="text-[#A4B8D3]">
                 Not at all! Our platform is designed to be user-friendly for everyone, regardless of technical
@@ -785,7 +785,7 @@ export default function LandingPage() {
               Ready to take your business online?
             </h2>
             <p className="text-[#E1E7EF] mb-8">
-              Join thousands of businesses that trust WebifyPro to build their online presence. Start your 14-day free
+              Join thousands of businesses that trust ZERO | HUB to build their online presence. Start your 14-day free
               trial today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

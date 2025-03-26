@@ -35,7 +35,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                 <span className="text-sm font-bold bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] text-transparent bg-clip-text">W</span>
               </div>
             </div>
-            <span className="text-xl font-bold hidden sm:inline-block">WebifyPro</span>
+            <span className="text-xl font-bold hidden sm:inline-block">ZERO | HUB</span>
           </Link>
 
           {/* Search Bar */}

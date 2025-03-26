@@ -14,7 +14,7 @@ const Footer = () => {
                                 <Globe className="h-6 w-6 text-white relative z-10" />
                             </div>
                             <span className="text-lg font-bold bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] text-transparent bg-clip-text">
-                                WebifyPro
+                            ZERO | HUB
                             </span>
                         </Link>
                         <p className="text-[#A4B8D3] mb-4 text-sm md:text-base">The all-in-one platform to establish and grow your business online.</p>
@@ -48,7 +48,7 @@ const Footer = () => {
                     ))}
                 </div>
                 <div className="border-t border-[#1E293B] pt-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                    <p className="text-[#A4B8D3] text-xs md:text-sm">&copy; {new Date().getFullYear()} WebifyPro. All rights reserved.</p>
+                    <p className="text-[#A4B8D3] text-xs md:text-sm">&copy; {new Date().getFullYear()} ZERO | HUB. All rights reserved.</p>
                     <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
                         {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((policy, index) => (
                             <Link key={index} href="#" className="text-[#A4B8D3] hover:text-[#FF3D00] text-xs md:text-sm transition-colors">
