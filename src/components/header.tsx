@@ -63,7 +63,7 @@ const Header = () => {
 
                 {/* Desktop Buttons */}
                 <div className="hidden md:flex items-center gap-4">
-                    <Link href="/login" className="text-sm hover:text-[#FF3D00] transition-colors">
+                    <Link href="/sign-in" className="text-sm hover:text-[#FF3D00] transition-colors">
                         Login
                     </Link>
                     <Button className="bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] hover:opacity-90 text-white border-0 shadow-[0_0_20px_rgba(255,61,0,0.4)]" onClick={handleClick}>
@@ -90,7 +90,7 @@ const Header = () => {
                     <Link href="/docs" className="text-sm text-white hover:text-[#FF3D00] transition-colors" onClick={closeMenu}>
                         Docs
                     </Link>
-                    <Link href="/login" className="text-sm text-white hover:text-[#FF3D00] transition-colors" onClick={closeMenu}>
+                    <Link href="/sign-in" className="text-sm text-white hover:text-[#FF3D00] transition-colors" onClick={closeMenu}>
                         Login
                     </Link>
                     <Button className="bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] hover:opacity-90 text-white border-0 shadow-[0_0_20px_rgba(255,61,0,0.4)] w-full" onClick={closeMenu}>

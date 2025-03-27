@@ -29,7 +29,6 @@ import {
   Users,
 } from "lucide-react"
 import { UserButton, useUser } from "@clerk/nextjs"
-import Navbar from "../../_components/navbar"
 
 export default function CustomersPage() {
   const [activeTab, setActiveTab] = useState("all")
@@ -54,7 +53,6 @@ export default function CustomersPage() {
               ZERO | HUB
             </span>
           </div>
-          <Navbar/>
           <div className="pt-4 border-t border-[#1E293B] mt-6">
             <Link
               href="/dashboard/settings"
