@@ -12,12 +12,12 @@ import { Switch } from "@/components/ui/switch"
 import { ArrowLeft, ImageIcon, Save, Upload } from "lucide-react"
 import { DashboardNav } from "../../../_components/navbar"
 
-export default function AddSubcategoryPage() {
+export default function AddCategoryPage() {
   const [image, setImage] = useState<string | null>(null)
 
   // Simulate image upload
   const handleImageUpload = () => {
-    setImage("/placeholder.svg?height=200&width=200&text=Subcategory+Image")
+    setImage("/placeholder.svg?height=200&width=200&text=Category+Image")
   }
 
   return (
@@ -25,57 +25,41 @@ export default function AddSubcategoryPage() {
       <div className="p-4 md:p-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center gap-4 mb-6">
-            <Link href="/dashboard/subcategories" className="flex items-center text-[#A4B8D3] hover:text-white">
+            <Link href="/dashboard/categories" className="flex items-center text-[#A4B8D3] hover:text-white">
               <ArrowLeft className="h-5 w-5 mr-2" />
-              <span>Back to Subcategories</span>
+              <span>Back to Categories</span>
             </Link>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-[#FF3D00] via-[#FF00E5] to-[#7000FF] text-transparent bg-clip-text">
-                Add New Subcategory
+                Add New Category
               </h1>
-              <p className="text-[#A4B8D3]">Create a new product subcategory</p>
+              <p className="text-[#A4B8D3]">Create a new product category</p>
             </div>
           </div>
 
           <Card className="bg-[#0A1228]/80 border-[#1E293B] backdrop-blur-sm mb-6">
             <CardHeader>
-              <CardTitle>Subcategory Information</CardTitle>
-              <CardDescription className="text-[#A4B8D3]">Basic information about the subcategory</CardDescription>
+              <CardTitle>Category Information</CardTitle>
+              <CardDescription className="text-[#A4B8D3]">Basic information about the category</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Subcategory Name</Label>
+                  <Label htmlFor="name">Category Name</Label>
                   <Input
                     id="name"
-                    placeholder="Enter subcategory name"
+                    placeholder="Enter category name"
                     className="bg-[#050A18] border-[#1E293B] text-white focus-visible:ring-[#FF00E5]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="parent">Parent Category</Label>
-                  <Select>
-                    <SelectTrigger className="bg-[#050A18] border-[#1E293B] text-white focus:ring-[#FF00E5]">
-                      <SelectValue placeholder="Select parent category" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0A1228] border-[#1E293B] text-white">
-                      <SelectItem value="apparel">Apparel</SelectItem>
-                      <SelectItem value="electronics">Electronics</SelectItem>
-                      <SelectItem value="home">Home & Kitchen</SelectItem>
-                      <SelectItem value="beauty">Beauty & Personal Care</SelectItem>
-                      <SelectItem value="sports">Sports & Outdoors</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-[#A4B8D3]">Select the parent category this subcategory belongs to.</p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="slug">Subcategory Slug</Label>
+                  <Label htmlFor="slug">Category Slug</Label>
                   <Input
                     id="slug"
-                    placeholder="Enter subcategory slug"
+                    placeholder="Enter category slug"
                     className="bg-[#050A18] border-[#1E293B] text-white focus-visible:ring-[#FF00E5]"
                   />
                   <p className="text-xs text-[#A4B8D3]">
@@ -87,7 +71,7 @@ export default function AddSubcategoryPage() {
                   <Label htmlFor="description">Description</Label>
                   <Textarea
                     id="description"
-                    placeholder="Enter subcategory description"
+                    placeholder="Enter category description"
                     className="min-h-[100px] bg-[#050A18] border-[#1E293B] text-white focus-visible:ring-[#FF00E5]"
                   />
                 </div>
@@ -97,8 +81,8 @@ export default function AddSubcategoryPage() {
 
           <Card className="bg-[#0A1228]/80 border-[#1E293B] backdrop-blur-sm mb-6">
             <CardHeader>
-              <CardTitle>Subcategory Image</CardTitle>
-              <CardDescription className="text-[#A4B8D3]">Upload an image for this subcategory</CardDescription>
+              <CardTitle>Category Image</CardTitle>
+              <CardDescription className="text-[#A4B8D3]">Upload an image for this category</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {!image ? (
@@ -121,7 +105,7 @@ export default function AddSubcategoryPage() {
                   <div className="relative mx-auto w-40 h-40">
                     <img
                       src={image || "/placeholder.svg"}
-                      alt="Subcategory thumbnail"
+                      alt="Category thumbnail"
                       className="w-full h-full object-cover rounded-lg border border-[#1E293B]"
                     />
                     <Button
@@ -141,10 +125,29 @@ export default function AddSubcategoryPage() {
           <Card className="bg-[#0A1228]/80 border-[#1E293B] backdrop-blur-sm mb-6">
             <CardHeader>
               <CardTitle>Display Settings</CardTitle>
-              <CardDescription className="text-[#A4B8D3]">Configure how this subcategory appears</CardDescription>
+              <CardDescription className="text-[#A4B8D3]">Configure how this category appears</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="parent">Parent Category</Label>
+                  <Select>
+                    <SelectTrigger className="bg-[#050A18] border-[#1E293B] text-white focus:ring-[#FF00E5]">
+                      <SelectValue placeholder="None (top level category)" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#0A1228] border-[#1E293B] text-white">
+                      <SelectItem value="none">None (top level category)</SelectItem>
+                      <SelectItem value="apparel">Apparel</SelectItem>
+                      <SelectItem value="electronics">Electronics</SelectItem>
+                      <SelectItem value="home">Home & Kitchen</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-[#A4B8D3]">
+                    Categories can have a hierarchy. You might have a parent category of "Apparel" and children
+                    categories of "T-shirts" and "Hoodies".
+                  </p>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="display-order">Display Order</Label>
                   <Input
@@ -154,23 +157,23 @@ export default function AddSubcategoryPage() {
                     className="bg-[#050A18] border-[#1E293B] text-white focus-visible:ring-[#FF00E5]"
                   />
                   <p className="text-xs text-[#A4B8D3]">
-                    Subcategories are typically displayed in alphabetical order. You can choose a custom display order
-                    by entering a number here.
+                    Categories are typically displayed in alphabetical order. You can choose a custom display order by
+                    entering a number here.
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium">Show in Menu</h4>
-                    <p className="text-sm text-[#A4B8D3]">Display this subcategory in the navigation menu</p>
+                    <p className="text-sm text-[#A4B8D3]">Display this category in the navigation menu</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium">Featured Subcategory</h4>
-                    <p className="text-sm text-[#A4B8D3]">Highlight this subcategory on the parent category page</p>
+                    <h4 className="font-medium">Featured Category</h4>
+                    <p className="text-sm text-[#A4B8D3]">Highlight this category on the homepage</p>
                   </div>
                   <Switch />
                 </div>
@@ -181,7 +184,7 @@ export default function AddSubcategoryPage() {
           <Card className="bg-[#0A1228]/80 border-[#1E293B] backdrop-blur-sm mb-6">
             <CardHeader>
               <CardTitle>SEO Settings</CardTitle>
-              <CardDescription className="text-[#A4B8D3]">Optimize this subcategory for search engines</CardDescription>
+              <CardDescription className="text-[#A4B8D3]">Optimize this category for search engines</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -219,7 +222,7 @@ export default function AddSubcategoryPage() {
             </Button>
             <Button className="bg-gradient-to-r from-[#FF3D00] to-[#FF00E5] hover:opacity-90 text-white border-0 shadow-[0_0_10px_rgba(255,61,0,0.3)]">
               <Save className="h-4 w-4 mr-2" />
-              Create Subcategory
+              Create Category
             </Button>
           </div>
         </div>
