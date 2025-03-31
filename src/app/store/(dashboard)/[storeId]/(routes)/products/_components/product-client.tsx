@@ -216,7 +216,7 @@ const ProductClient = ({ data }: { data: ProductColumn[] }) => {
                                                 <td className="py-3 px-4 text-sm">
                                                     {product.inventory > 0 ? product.inventory : "Out of stock"}
                                                 </td>
-                                                <td className="py-3 px-4 text-sm font-medium">{product.price}</td>
+                                                <td className="py-3 px-4 text-sm font-medium">{product.regularPrice}</td>
                                                 <td className="py-3 px-4 text-right">
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => router.push(`/store/${params.storeId}/products/${product.id}`)}>

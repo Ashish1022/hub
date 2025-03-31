@@ -10,7 +10,7 @@ export type ProductColumn = {
     category: string;
     status: string;
     inventory: number;
-    price: string;
+    regularPrice: number;
 }
 
 export const columns: ColumnDef<ProductColumn>[] = [
@@ -31,7 +31,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
         header: "Inventory",
     },
     {
-        accessorKey: "price",
+        accessorKey: "regularPrice",
         header: "Price",
     },
     {

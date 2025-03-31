@@ -30,7 +30,7 @@ export default async function ProductsPage(props: { params: Promise<{ storeId: s
       category: item.category ?? "Uncategorized",
       status: item.status ? "Archived" : totalStock > 0 ? "In Stock" : "Out of Stock",
       inventory: totalStock,
-      price: formatter.format(item.variants[0].price!)
+      regularPrice: Number(item.regularPrice),
     };
   });
 

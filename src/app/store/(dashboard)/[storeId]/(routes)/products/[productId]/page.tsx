@@ -36,7 +36,7 @@ export default async function AddProductPage(props: { params: Promise<{ productI
       <div className="flex h-screen overflow-hidden">
         <div className="flex-1 flex flex-col overflow-hidden">
           <DashboardNav>
-            <ProductForm initialData={product} images={images} />
+            <ProductForm initialData={product}/>
           </DashboardNav>
         </div>
       </div>

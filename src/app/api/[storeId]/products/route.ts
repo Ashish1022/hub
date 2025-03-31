@@ -119,7 +119,7 @@ export async function POST(
                 tags: tags ? JSON.stringify(tags) : null,
                 category,
                 subcategory,
-                brand,
+                brand:"cm8vscbmi0000lnlkiew0qjcy",
                 collections: collections ? JSON.stringify(collections) : null,
                 status,
                 publishDate: publishDate ? new Date(publishDate) : null,
