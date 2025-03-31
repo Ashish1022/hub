@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -50,110 +39,116 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var prismadb_1 = require("../lib/db/prismadb");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var productsData, _i, productsData_1, productData, product;
+        var brand1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log("Seeding database...");
-                    productsData = [
-                        {
-                            name: "Anime Sticker Pack",
-                            description: "High-quality anime stickers with popular characters.",
-                            shortDescription: "Premium anime stickers.",
-                            barcode: "123456789",
-                            category: "Stickers",
-                            subcategory: "Anime",
-                            brand: "Otaku Brand",
-                            collection: "Spring 2025",
-                            featured: true,
-                            archived: false,
-                            regular_price: 299,
-                            cost_price: 150,
-                            sale_price: 250,
-                            profit_margin: 100,
-                            tax_class: "GST",
-                            tax_status: "Taxable",
-                            bulk_pricing: "None",
-                            sale: true,
-                            seo_title: "Anime Sticker Pack",
-                            seo_description: "Best anime stickers for your collection.",
-                            canonical_url: "https://mystore.com/anime-sticker-pack",
-                            product_url_slug: "anime-pack",
-                            open_graph_title: "Anime Sticker Pack",
-                            open_graph_description: "The best anime sticker collection for fans.",
+                case 0: return [4 /*yield*/, prismadb_1.default.brand.create({
+                        data: {
+                            name: 'Brand A',
+                            description: 'Description of Brand A',
+                            slug: 'brand-a',
+                            logoUrl: 'https://example.com/logoA.png',
+                            websiteUrl: 'https://brand-a.com',
+                            storeId: "cm8x8qp6n0000lne0d89jk5u6"
                         },
-                        {
-                            name: "One Piece Sticker Set",
-                            description: "A collection of One Piece stickers featuring Luffy & crew.",
-                            shortDescription: "One Piece-themed stickers.",
-                            barcode: "987654321",
-                            category: "Stickers",
-                            subcategory: "Anime",
-                            brand: "Otaku Brand",
-                            collection: "Summer 2025",
-                            featured: true,
-                            archived: false,
-                            regular_price: 349,
-                            cost_price: 175,
-                            sale_price: 299,
-                            profit_margin: 124,
-                            tax_class: "GST",
-                            tax_status: "Taxable",
-                            bulk_pricing: "None",
-                            sale: true,
-                            seo_title: "One Piece Sticker Set",
-                            seo_description: "One Piece stickers for fans.",
-                            canonical_url: "https://mystore.com/one-piece-sticker-set",
-                            product_url_slug: "one-piece-set",
-                            open_graph_title: "One Piece Sticker Set",
-                            open_graph_description: "Limited edition One Piece sticker set.",
-                        },
-                    ];
-                    _i = 0, productsData_1 = productsData;
-                    _a.label = 1;
+                    })];
                 case 1:
-                    if (!(_i < productsData_1.length)) return [3 /*break*/, 4];
-                    productData = productsData_1[_i];
+                    brand1 = _a.sent();
+                    // Create Products and link them to Brands by using the correct Brand ID
                     return [4 /*yield*/, prismadb_1.default.product.create({
-                            data: __assign(__assign({ storeId: "ff917475-f4ce-4a82-8e25-5cd2ce2f8f6f" }, productData), { tags: {
-                                    create: [{ name: "p1" }], // Fix: Dummy productId or use later reference
-                                }, seo_keywords: {
-                                    create: [{}],
-                                }, product_image: {
-                                    create: [
-                                        { url: "https://placekitten.com/200/200", type: "main" },
-                                    ],
-                                }, product_variants: {
-                                    create: [
-                                        {
-                                            name: "Default Variant",
-                                            sku: "SKU-".concat(Math.random().toString(36).substring(7)),
-                                            barcode: "BAR-".concat(Math.random().toString(36).substring(7)),
-                                            basePrice: productData.regular_price,
-                                            stockQuantity: 100,
-                                            reservedStock: 0,
-                                            allowBackorder: false,
-                                            lowStockThreshold: 5,
-                                        },
-                                    ],
-                                } }),
+                            data: {
+                                name: 'Product 1',
+                                description: 'Description of Product 1',
+                                shortDescription: 'Short Description of Product 1',
+                                sku: 'sku123',
+                                barcode: 'barcode123',
+                                material: 'Material 1',
+                                width: 10.0,
+                                height: 20.0,
+                                depth: 5.0,
+                                weight: 1.5,
+                                tags: JSON.stringify(['tag1', 'tag2']),
+                                category: 'Category A',
+                                subcategory: 'Subcategory A',
+                                brand: brand1.id, // Reference the ID of Brand A
+                                collections: JSON.stringify(['collection1']),
+                                status: 'active',
+                                publishDate: new Date(),
+                                isFeatured: false,
+                                isRecommended: false,
+                                isNew: true,
+                                isBestseller: false,
+                                regularPrice: 100.0,
+                                salePrice: 80.0,
+                                costPrice: 50.0,
+                                profitMargin: 30.0,
+                                onSale: true,
+                                saleStartDate: new Date(),
+                                saleEndDate: new Date(),
+                                taxClass: 'standard',
+                                taxStatus: 'taxable',
+                                bulkPricing: JSON.stringify([{ quantity: 10, price: 90.0 }]),
+                                trackInventory: true,
+                                stockQuantity: 100,
+                                lowStockThreshold: 5,
+                                stockStatus: 'in-stock',
+                                allowBackorders: false,
+                                backorderLimit: 0,
+                                soldIndividually: false,
+                                warehouse: 'Warehouse 1',
+                                binLocation: 'Bin A',
+                                minPurchaseQuantity: 1,
+                                maxPurchaseQuantity: 5,
+                                hasVariants: false,
+                                variantOptions: JSON.stringify([]),
+                                variantDisplay: 'dropdown',
+                                isPhysical: true,
+                                shippingWeight: 1.5,
+                                shippingLength: 10.0,
+                                shippingWidth: 5.0,
+                                shippingHeight: 20.0,
+                                shippingClass: 'Standard',
+                                shippingRestrictions: JSON.stringify([]),
+                                freeShipping: false,
+                                shippingMarkup: 10.0,
+                                requiresShippingAddress: true,
+                                relatedProducts: JSON.stringify(['product2']),
+                                upsellProducts: JSON.stringify(['product3']),
+                                crossSellProducts: JSON.stringify(['product4']),
+                                metaTitle: 'Product 1 Meta Title',
+                                metaDescription: 'Product 1 Meta Description',
+                                metaKeywords: 'product, example, brand A',
+                                canonicalUrl: 'https://example.com/product1',
+                                ogTitle: 'Product 1 OG Title',
+                                ogDescription: 'Product 1 OG Description',
+                                ogImage: 'https://example.com/product1-og.jpg',
+                                slug: 'product-1',
+                                purchaseNote: 'Product 1 Purchase Note',
+                                enableReviews: true,
+                                downloadable: false,
+                                downloadFiles: JSON.stringify([]),
+                                preOrderAvailable: false,
+                                preOrderReleaseDate: new Date(),
+                                preOrderMessage: 'Pre-order Product 1',
+                                customizable: false,
+                                customizationOptions: JSON.stringify([]),
+                                storeId: 'cm8x8qp6n0000lne0d89jk5u6',
+                            },
                         })];
                 case 2:
-                    product = _a.sent();
-                    console.log("Created product: ".concat(product.name));
-                    _a.label = 3;
-                case 3:
-                    _i++;
-                    return [3 /*break*/, 1];
-                case 4:
-                    console.log("Seeding complete!");
+                    // Create Products and link them to Brands by using the correct Brand ID
+                    _a.sent();
+                    console.log('Brands and Products seeded!');
                     return [2 /*return*/];
             }
         });
     });
 }
 main()
-    .catch(function (e) { return console.error(e); })
+    .catch(function (e) {
+    console.error(e);
+    process.exit(1);
+})
     .finally(function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {

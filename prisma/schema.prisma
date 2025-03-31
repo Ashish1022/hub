@@ -30,84 +30,84 @@ model Store {
 }
 
 model Product {
-  id                      String    @id @default(cuid())
+  id                      String   @id @default(cuid())
   name                    String
-  description             String?   @db.Text
-  shortDescription        String?   @db.Text
-  sku                     String?   @unique
-  barcode                 String?
-  material                String?
-  width                   Float?
-  height                  Float?
-  depth                   Float?
-  weight                  Float?
-  tags                    String?   @db.Text // Stored as JSON string
-  category                String?
-  subcategory             String?
-  brand                   String?
-  collections             String?   @db.Text // Stored as JSON string
-  status                  String    @default("active")
-  publishDate             DateTime?
-  isFeatured              Boolean   @default(false)
-  isRecommended           Boolean   @default(false)
-  isNew                   Boolean   @default(false)
-  isBestseller            Boolean   @default(false)
-  regularPrice            Float?
-  salePrice               Float?
-  costPrice               Float?
-  profitMargin            Float?
-  onSale                  Boolean   @default(false)
-  saleStartDate           DateTime?
-  saleEndDate             DateTime?
-  taxClass                String    @default("standard")
-  taxStatus               String    @default("taxable")
-  bulkPricing             String?   @db.Text // Stored as JSON string
-  trackInventory          Boolean   @default(true)
-  stockQuantity           Int       @default(0)
-  lowStockThreshold       Int       @default(5)
-  stockStatus             String    @default("in-stock")
-  allowBackorders         Boolean   @default(false)
-  backorderLimit          Int?
-  soldIndividually        Boolean   @default(false)
-  warehouse               String?
-  binLocation             String?
-  minPurchaseQuantity     Int       @default(1)
-  maxPurchaseQuantity     Int?
-  hasVariants             Boolean   @default(false)
-  variantOptions          String?   @db.Text // Stored as JSON string
-  variantDisplay          String    @default("dropdown")
-  isPhysical              Boolean   @default(true)
-  shippingWeight          Float?
-  shippingLength          Float?
-  shippingWidth           Float?
-  shippingHeight          Float?
-  shippingClass           String?
-  shippingRestrictions    String?
-  freeShipping            Boolean   @default(false)
-  shippingMarkup          Float?
-  requiresShippingAddress Boolean   @default(true)
-  relatedProducts         String?   @db.Text // Stored as JSON string
-  upsellProducts          String?   @db.Text // Stored as JSON string
-  crossSellProducts       String?   @db.Text // Stored as JSON string
-  metaTitle               String?
-  metaDescription         String?   @db.Text
-  metaKeywords            String?
-  canonicalUrl            String?
-  ogTitle                 String?
-  ogDescription           String?   @db.Text
-  ogImage                 String?
-  slug                    String?   @unique
-  purchaseNote            String?   @db.Text
-  enableReviews           Boolean   @default(true)
-  downloadable            Boolean   @default(false)
-  downloadFiles           String?   @db.Text // Stored as JSON string
-  preOrderAvailable       Boolean   @default(false)
-  preOrderReleaseDate     DateTime?
-  preOrderMessage         String?   @db.Text
-  customizable            Boolean   @default(false)
-  customizationOptions    String?   @db.Text // Stored as JSON string
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  description             String   @db.Text
+  shortDescription        String   @db.Text
+  sku                     String   @unique
+  barcode                 String
+  material                String
+  width                   Float
+  height                  Float
+  depth                   Float
+  weight                  Float
+  tags                    String   @db.Text // Stored as JSON string
+  category                String
+  subcategory             String
+  brand                   String
+  collections             String   @db.Text // Stored as JSON string
+  status                  String   @default("active")
+  publishDate             DateTime
+  isFeatured              Boolean  @default(false)
+  isRecommended           Boolean  @default(false)
+  isNew                   Boolean  @default(false)
+  isBestseller            Boolean  @default(false)
+  regularPrice            Float
+  salePrice               Float
+  costPrice               Float
+  profitMargin            Float
+  onSale                  Boolean  @default(false)
+  saleStartDate           DateTime
+  saleEndDate             DateTime
+  taxClass                String   @default("standard")
+  taxStatus               String   @default("taxable")
+  bulkPricing             String   @db.Text // Stored as JSON string
+  trackInventory          Boolean  @default(true)
+  stockQuantity           Int      @default(0)
+  lowStockThreshold       Int      @default(5)
+  stockStatus             String   @default("in-stock")
+  allowBackorders         Boolean  @default(false)
+  backorderLimit          Int
+  soldIndividually        Boolean  @default(false)
+  warehouse               String
+  binLocation             String
+  minPurchaseQuantity     Int      @default(1)
+  maxPurchaseQuantity     Int
+  hasVariants             Boolean  @default(false)
+  variantOptions          String   @db.Text // Stored as JSON string
+  variantDisplay          String   @default("dropdown")
+  isPhysical              Boolean  @default(true)
+  shippingWeight          Float
+  shippingLength          Float
+  shippingWidth           Float
+  shippingHeight          Float
+  shippingClass           String
+  shippingRestrictions    String
+  freeShipping            Boolean  @default(false)
+  shippingMarkup          Float
+  requiresShippingAddress Boolean  @default(true)
+  relatedProducts         String   @db.Text // Stored as JSON string
+  upsellProducts          String   @db.Text // Stored as JSON string
+  crossSellProducts       String   @db.Text // Stored as JSON string
+  metaTitle               String
+  metaDescription         String   @db.Text
+  metaKeywords            String
+  canonicalUrl            String
+  ogTitle                 String
+  ogDescription           String   @db.Text
+  ogImage                 String
+  slug                    String   @unique
+  purchaseNote            String   @db.Text
+  enableReviews           Boolean  @default(true)
+  downloadable            Boolean  @default(false)
+  downloadFiles           String   @db.Text // Stored as JSON string
+  preOrderAvailable       Boolean  @default(false)
+  preOrderReleaseDate     DateTime
+  preOrderMessage         String   @db.Text
+  customizable            Boolean  @default(false)
+  customizationOptions    String   @db.Text // Stored as JSON string
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
   storeId                 String
 
   // Relations
@@ -126,11 +126,11 @@ model Product {
 model Image {
   id         String   @id @default(cuid())
   url        String
-  alt        String?
+  alt        String
   type       String   @default("image")
   position   Int      @default(0)
   productId  String
-  variantIds String?  @db.Text // Stored as JSON string
+  variantIds String   @db.Text // Stored as JSON string
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -155,18 +155,18 @@ model Attribute {
 model Variant {
   id                String   @id @default(cuid())
   options           String   @db.Text // Stored as JSON string
-  sku               String?
-  barcode           String?
-  price             Float?
-  compareAtPrice    Float?
-  costPrice         Float?
+  sku               String
+  barcode           String
+  price             Float
+  compareAtPrice    Float
+  costPrice         Float
   stockQuantity     Int      @default(0)
-  weight            Float?
-  dimensions        String?  @db.Text // Stored as JSON string (length, width, height)
-  images            String?  @db.Text // Stored as JSON string of image IDs
+  weight            Float
+  dimensions        String   @db.Text // Stored as JSON string (length, width, height)
+  images            String   @db.Text // Stored as JSON string of image IDs
   isEnabled         Boolean  @default(true)
-  lowStockThreshold Int?
-  backorderLimit    Int?
+  lowStockThreshold Int
+  backorderLimit    Int
   allowBackorders   Boolean  @default(false)
   productId         String
   createdAt         DateTime @default(now())
@@ -179,7 +179,7 @@ model Variant {
 model CustomField {
   id        String   @id @default(cuid())
   name      String
-  value     String?
+  value     String
   visible   Boolean  @default(true)
   productId String
   createdAt DateTime @default(now())
@@ -192,10 +192,10 @@ model CustomField {
 model Category {
   id          String   @id @default(cuid())
   name        String
-  description String?  @db.Text
-  slug        String?  @unique
-  parentId    String?
-  imageUrl    String?
+  description String   @db.Text
+  slug        String   @unique
+  parentId    String
+  imageUrl    String
   isActive    Boolean  @default(true)
   storeId     String
   createdAt   DateTime @default(now())
@@ -203,7 +203,7 @@ model Category {
 
   // Relations
   store    Store             @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  parent   Category?         @relation("CategoryToCategory", fields: [parentId], references: [id])
+  parent   Category          @relation("CategoryToCategory", fields: [parentId], references: [id])
   children Category[]        @relation("CategoryToCategory")
   products CategoryProduct[]
 }
@@ -221,17 +221,17 @@ model CategoryProduct {
 }
 
 model Collection {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
-  description String?   @db.Text
-  slug        String?   @unique
-  imageUrl    String?
-  isActive    Boolean   @default(true)
-  startDate   DateTime?
-  endDate     DateTime?
+  description String   @db.Text
+  slug        String   @unique
+  imageUrl    String
+  isActive    Boolean  @default(true)
+  startDate   DateTime
+  endDate     DateTime
   storeId     String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   store    Store               @relation(fields: [storeId], references: [id], onDelete: Cascade)
@@ -253,10 +253,10 @@ model CollectionProduct {
 model Brand {
   id          String   @id @default(cuid())
   name        String
-  description String?  @db.Text
-  slug        String?  @unique
-  logoUrl     String?
-  websiteUrl  String?
+  description String   @db.Text
+  slug        String   @unique
+  logoUrl     String
+  websiteUrl  String
   isActive    Boolean  @default(true)
   storeId     String
   createdAt   DateTime @default(now())
@@ -270,13 +270,13 @@ model Brand {
 model Review {
   id            String   @id @default(cuid())
   rating        Int
-  title         String?
-  content       String?  @db.Text
+  title         String
+  content       String   @db.Text
   status        String   @default("pending") // pending, approved, rejected
   productId     String
-  customerId    String?
-  customerName  String?
-  customerEmail String?
+  customerId    String
+  customerName  String
+  customerEmail String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -290,8 +290,8 @@ model Customer {
   firstName String
   lastName  String
   email     String
-  phone     String?
-  password  String? // Hashed password if applicable
+  phone     String
+  password  String // Hashed password if applicable
   isGuest   Boolean  @default(false)
   storeId   String
   createdAt DateTime @default(now())
@@ -309,14 +309,14 @@ model Address {
   type       String   @default("shipping") // shipping, billing
   firstName  String
   lastName   String
-  company    String?
+  company    String
   address1   String
-  address2   String?
+  address2   String
   city       String
-  state      String?
+  state      String
   postalCode String
   country    String
-  phone      String?
+  phone      String
   isDefault  Boolean  @default(false)
   customerId String
   createdAt  DateTime @default(now())
@@ -336,14 +336,14 @@ model Order {
   discount        Float    @default(0)
   total           Float
   currency        String   @default("USD")
-  paymentMethod   String?
+  paymentMethod   String
   paymentStatus   String   @default("pending") // pending, paid, failed
-  shippingMethod  String?
-  shippingAddress String?  @db.Text // Stored as JSON string
-  billingAddress  String?  @db.Text // Stored as JSON string
-  customerNotes   String?  @db.Text
-  adminNotes      String?  @db.Text
-  customerId      String?
+  shippingMethod  String
+  shippingAddress String   @db.Text // Stored as JSON string
+  billingAddress  String   @db.Text // Stored as JSON string
+  customerNotes   String   @db.Text
+  adminNotes      String   @db.Text
+  customerId      String
   storeId         String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -362,9 +362,9 @@ model OrderItem {
   tax       Float    @default(0)
   discount  Float    @default(0)
   total     Float
-  options   String?  @db.Text // Stored as JSON string
+  options   String   @db.Text // Stored as JSON string
   productId String
-  variantId String?
+  variantId String
   orderId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -375,29 +375,29 @@ model OrderItem {
 }
 
 model Coupon {
-  id            String    @id @default(cuid())
-  code          String    @unique
-  description   String?   @db.Text
-  discountType  String    @default("percentage") // percentage, fixed
+  id            String   @id @default(cuid())
+  code          String   @unique
+  description   String   @db.Text
+  discountType  String   @default("percentage") // percentage, fixed
   discountValue Float
-  minimumSpend  Float?
-  maximumSpend  Float?
-  usageLimit    Int?
-  usageCount    Int       @default(0)
-  isActive      Boolean   @default(true)
-  startDate     DateTime?
-  endDate       DateTime?
+  minimumSpend  Float
+  maximumSpend  Float
+  usageLimit    Int
+  usageCount    Int      @default(0)
+  isActive      Boolean  @default(true)
+  startDate     DateTime
+  endDate       DateTime
   storeId       String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model ShippingZone {
   id          String   @id @default(cuid())
   name        String
   countries   String   @db.Text // Stored as JSON string
-  regions     String?  @db.Text // Stored as JSON string
-  postalCodes String?  @db.Text // Stored as JSON string
+  regions     String   @db.Text // Stored as JSON string
+  postalCodes String   @db.Text // Stored as JSON string
   methods     String   @db.Text // Stored as JSON string
   storeId     String
   createdAt   DateTime @default(now())
@@ -409,9 +409,9 @@ model TaxRate {
   name       String
   rate       Float
   country    String
-  state      String?
-  postalCode String?
-  city       String?
+  state      String
+  postalCode String
+  city       String
   priority   Int      @default(0)
   compound   Boolean  @default(false)
   isActive   Boolean  @default(true)
@@ -423,8 +423,8 @@ model TaxRate {
 model PaymentMethod {
   id           String   @id @default(cuid())
   name         String
-  description  String?  @db.Text
-  instructions String?  @db.Text
+  description  String   @db.Text
+  instructions String   @db.Text
   isActive     Boolean  @default(true)
   sortOrder    Int      @default(0)
   storeId      String
@@ -435,9 +435,9 @@ model PaymentMethod {
 model ShippingMethod {
   id          String   @id @default(cuid())
   name        String
-  description String?  @db.Text
+  description String   @db.Text
   cost        Float
-  freeAbove   Float?
+  freeAbove   Float
   isActive    Boolean  @default(true)
   sortOrder   Int      @default(0)
   storeId     String

@@ -1,67 +1,64 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { productFormSchema, type ProductFormValues } from "@/app/store/(dashboard)/[storeId]/(routes)/products/[productId]/_components/schema";
+import { defaultProductValues, productFormSchema, type ProductFormValues } from "@/app/store/(dashboard)/[storeId]/(routes)/products/[productId]/_components/schema";
 import { Product } from "@prisma/client";
 
-export function useProductForm(initialData: Product) {
+export function useProductForm(initialData: Product | null) {
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productFormSchema),
         defaultValues: initialData ? {
             ...initialData,
-        } : {
-            name: "",
-            description: "",
-            shortDescription: "",
-            sku: "",
-            barcode: "",
-            material: "",
-            tags: [],
-            category: "",
-            subcategory: "",
-            brand: "",
-            collections: [],
-            status: "active",
-            publishDate: new Date(),
-            isFeatured: false,
-            isRecommended: false,
-            isNew: false,
-            isBestseller: false,
-            regularPrice: undefined,
-            salePrice: undefined,
-            costPrice: undefined,
-            profitMargin: undefined,
-            onSale: false,
-            taxClass: "standard",
-            taxStatus: "taxable",
-            bulkPricing: [],
-            trackInventory: true,
-            stockQuantity: 0,
-            lowStockThreshold: 5,
-            stockStatus: "in-stock",
-            allowBackorders: false,
-            soldIndividually: false,
-            warehouse: "",
-            binLocation: "",
-            minPurchaseQuantity: 1,
-            hasVariants: false,
-            variantOptions: [],
-            variantDisplay: "dropdown",
-            variants: [],
-            isPhysical: true,
-            freeShipping: false,
-            requiresShippingAddress: true,
-            relatedProducts: [],
-            upsellProducts: [],
-            crossSellProducts: [],
-            enableReviews: true,
-            downloadable: false,
-            downloadFiles: [],
-            preOrderAvailable: false,
-            customizable: false,
-            customizationOptions: [],
-            images: [],
-            customFields: [],
-        },
+            tags: Array.isArray(initialData?.tags)
+                ? initialData.tags
+                : typeof initialData?.tags === "string"
+                    ? JSON.parse(initialData.tags)
+                    : [],
+            collections: Array.isArray(initialData?.collections)
+                ? initialData.collections
+                : typeof initialData?.collections === "string"
+                    ? JSON.parse(initialData.collections)
+                    : [],
+            bulkPricing: Array.isArray(initialData?.bulkPricing)
+                ? initialData.bulkPricing
+                : typeof initialData?.bulkPricing === "string"
+                    ? JSON.parse(initialData.bulkPricing)
+                    : [],
+            variantOptions: Array.isArray(initialData?.variantOptions)
+                ? initialData.variantOptions
+                : typeof initialData?.variantOptions === "string"
+                    ? JSON.parse(initialData.variantOptions)
+                    : [],
+            shippingRestrictions: Array.isArray(initialData?.shippingRestrictions)
+                ? initialData.shippingRestrictions
+                : typeof initialData?.shippingRestrictions === "string"
+                    ? JSON.parse(initialData.shippingRestrictions)
+                    : [],
+            relatedProducts: Array.isArray(initialData?.relatedProducts)
+                ? initialData.relatedProducts
+                : typeof initialData?.relatedProducts === "string"
+                    ? JSON.parse(initialData.relatedProducts)
+                    : [],
+            upsellProducts: Array.isArray(initialData?.upsellProducts)
+                ? initialData.upsellProducts
+                : typeof initialData?.upsellProducts === "string"
+                    ? JSON.parse(initialData.upsellProducts)
+                    : [],
+            crossSellProducts: Array.isArray(initialData?.crossSellProducts)
+                ? initialData.crossSellProducts
+                : typeof initialData?.crossSellProducts === "string"
+                    ? JSON.parse(initialData.crossSellProducts)
+                    : [],
+            downloadFiles: Array.isArray(initialData?.downloadFiles)
+                ? initialData.downloadFiles
+                : typeof initialData?.downloadFiles === "string"
+                    ? JSON.parse(initialData.downloadFiles)
+                    : [],
+            customizationOptions: Array.isArray(initialData?.customizationOptions)
+                ? initialData.customizationOptions
+                : typeof initialData?.customizationOptions === "string"
+                    ? JSON.parse(initialData.customizationOptions) // Convert JSON string to array of objects
+                    : [],
+        } : defaultProductValues,
     });
 
     return form
