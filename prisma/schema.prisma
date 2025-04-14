@@ -1,0 +1,668 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Store {
+  id          String   @id @default(uuid())
+  name        String
+  userId      String
+  description String?  @db.Text
+  slug        String?  @unique
+  logoUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  isActive    Boolean @default(true)
+  storageUsed Int     @default(0)
+
+  // Relations
+  products      Product[]
+  categories    Category[]
+  subcategories Subcategory[]
+  collections   Collection[]
+  brands        Brand[]
+  orders        Order[]
+  customers     Customer[]
+  subscription  Subscription?
+}
+
+model Plan {
+  id              String   @id @default(uuid())
+  razorpayPlanId  String   @unique
+  name            String
+  description     String   @db.Text
+  features        String   @db.Text // JSON string of features
+  price           Float
+  billingInterval String   @default("month") // month, year
+  trialDays       Int      @default(0)
+  isActive        Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  productLimit    Int // Max products allowed
+  storageLimit    Int // Storage limit in MB
+  staffAccounts   Int // Number of staff accounts allowed
+  customDomain    Boolean  @default(false)
+  analyticsLevel  String   @default("basic") // basic, advanced, premium
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                 String    @id @default(uuid())
+  storeId            String    @unique
+  planId             String
+  status             String    @default("active") // active, canceled, past_due, trialing, unpaid
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean   @default(false)
+  canceledAt         DateTime?
+  trialStart         DateTime?
+  trialEnd           DateTime?
+  customerId         String // Customer ID in payment provider (Stripe, etc.)
+  subscriptionId     String? // Subscription ID in payment provider
+  paymentMethodId    String? // Payment method ID in payment provider
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relations
+  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  plan     Plan      @relation(fields: [planId], references: [id])
+  invoices Invoice[]
+
+  @@index([storeId])
+  @@index([planId])
+}
+
+model Invoice {
+  id                String    @id @default(uuid())
+  subscriptionId    String
+  invoiceNumber     String    @unique
+  amount            Float
+  status            String    @default("pending") // pending, paid, failed, refunded
+  currency          String    @default("USD")
+  invoiceDate       DateTime
+  dueDate           DateTime
+  paidDate          DateTime?
+  billingAddress    String    @db.Text // JSON string
+  paymentMethod     String
+  paymentProviderId String? // Invoice ID in payment provider
+  pdfUrl            String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([subscriptionId])
+}
+
+model PaymentProvider {
+  id            String   @id @default(uuid())
+  name          String
+  isActive      Boolean  @default(true)
+  apiKey        String?
+  apiSecret     String?
+  webhookSecret String?
+  mode          String   @default("test") // test, live
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model UsageLog {
+  id        String   @id @default(uuid())
+  storeId   String
+  metric    String // products_created, storage_used, api_calls, etc.
+  value     Float
+  timestamp DateTime @default(now())
+
+  @@index([storeId])
+}
+
+model StaffMember {
+  id          String   @id @default(uuid())
+  storeId     String
+  email       String
+  name        String
+  role        String   @default("staff") // owner, admin, staff
+  permissions String   @db.Text // JSON string of permissions
+  inviteToken String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model StoreDomain {
+  id         String   @id @default(uuid())
+  storeId    String
+  domain     String   @unique
+  isCustom   Boolean  @default(false)
+  isVerified Boolean  @default(false)
+  sslEnabled Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model Product {
+  id                      String   @id @default(uuid())
+  name                    String
+  description             String   @db.Text
+  shortDescription        String   @db.Text
+  sku                     String   @unique
+  barcode                 String
+  material                String
+  width                   Float
+  height                  Float
+  depth                   Float
+  weight                  Float
+  tags                    String   @db.Text
+  category                String
+  subcategory             String
+  brand                   String
+  collections             String   @db.Text
+  status                  String   @default("active")
+  publishDate             DateTime
+  isFeatured              Boolean  @default(false)
+  isRecommended           Boolean  @default(false)
+  isNew                   Boolean  @default(false)
+  isBestseller            Boolean  @default(false)
+  regularPrice            Float
+  salePrice               Float
+  costPrice               Float
+  profitMargin            Float
+  onSale                  Boolean  @default(false)
+  saleStartDate           DateTime
+  saleEndDate             DateTime
+  taxClass                String   @default("standard")
+  taxStatus               String   @default("taxable")
+  bulkPricing             String   @db.Text
+  trackInventory          Boolean  @default(true)
+  stockQuantity           Int      @default(0)
+  lowStockThreshold       Int      @default(5)
+  stockStatus             String   @default("in-stock")
+  allowBackorders         Boolean  @default(false)
+  backorderLimit          Int
+  soldIndividually        Boolean  @default(false)
+  warehouse               String
+  binLocation             String
+  minPurchaseQuantity     Int      @default(1)
+  maxPurchaseQuantity     Int
+  hasVariants             Boolean  @default(false)
+  variantOptions          String   @db.Text // Stored as JSON string
+  variantDisplay          String   @default("dropdown")
+  isPhysical              Boolean  @default(true)
+  shippingWeight          Float
+  shippingLength          Float
+  shippingWidth           Float
+  shippingHeight          Float
+  shippingClass           String
+  shippingRestrictions    String
+  freeShipping            Boolean  @default(false)
+  shippingMarkup          Float
+  requiresShippingAddress Boolean  @default(true)
+  relatedProducts         String   @db.Text // Stored as JSON string
+  upsellProducts          String   @db.Text // Stored as JSON string
+  crossSellProducts       String   @db.Text // Stored as JSON string
+  metaTitle               String
+  metaDescription         String   @db.Text
+  metaKeywords            String
+  canonicalUrl            String
+  ogTitle                 String
+  ogDescription           String   @db.Text
+  ogImage                 String
+  slug                    String   @unique
+  purchaseNote            String   @db.Text
+  enableReviews           Boolean  @default(true)
+  downloadable            Boolean  @default(false)
+  downloadFiles           String   @db.Text // Stored as JSON string
+  preOrderAvailable       Boolean  @default(false)
+  preOrderReleaseDate     DateTime
+  preOrderMessage         String   @db.Text
+  customizable            Boolean  @default(false)
+  customizationOptions    String   @db.Text // Stored as JSON string
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  storeId                 String
+
+  // Relations
+  store                Store                @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  images               Image[]
+  attributes           Attribute[]
+  variants             Variant[]
+  customFields         CustomField[]
+  reviews              Review[]
+  orderItems           OrderItem[]
+  categoryRelations    CategoryProduct[]
+  subcategoryRelations SubcategoryProduct[]
+  collectionRelations  CollectionProduct[]
+  brandRelation        Brand?               @relation(fields: [brand], references: [id])
+
+  @@index([storeId])
+  @@index([brand])
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  url        String
+  alt        String
+  type       String   @default("image")
+  position   Int      @default(0)
+  productId  String
+  variantIds String   @db.Text // Stored as JSON string
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Attribute {
+  id        String   @id @default(uuid())
+  name      String
+  values    String   @db.Text // Stored as JSON string
+  visible   Boolean  @default(true)
+  variation Boolean  @default(false)
+  productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Variant {
+  id                String   @id @default(uuid())
+  options           String   @db.Text // Stored as JSON string
+  sku               String
+  barcode           String
+  price             Float
+  compareAtPrice    Float
+  costPrice         Float
+  stockQuantity     Int      @default(0)
+  weight            Float
+  dimensions        String   @db.Text // Stored as JSON string (length, width, height)
+  images            String   @db.Text // Stored as JSON string of image IDs
+  isEnabled         Boolean  @default(true)
+  lowStockThreshold Int
+  backorderLimit    Int
+  allowBackorders   Boolean  @default(false)
+  productId         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model CustomField {
+  id        String   @id @default(uuid())
+  name      String
+  value     String
+  visible   Boolean  @default(true)
+  productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Category {
+  id              String   @id @default(uuid())
+  name            String
+  description     String   @db.Text
+  slug            String   @unique
+  imageUrl        String
+  isActive        Boolean  @default(true)
+  displayOrder    Int      @default(0)
+  showInMenu      Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  metaTitle       String
+  metaDescription String   @db.Text
+  metaKeywords    String
+  storeId         String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  store         Store             @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products      CategoryProduct[]
+  subcategories Subcategory[]
+
+  @@index([storeId])
+}
+
+model Subcategory {
+  id              String   @id @default(uuid())
+  name            String
+  description     String   @db.Text
+  slug            String   @unique
+  imageUrl        String
+  isActive        Boolean  @default(true)
+  displayOrder    Int      @default(0)
+  showInMenu      Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  metaTitle       String
+  metaDescription String   @db.Text
+  metaKeywords    String
+  categoryId      String
+  storeId         String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  store    Store                @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  category Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  products SubcategoryProduct[]
+
+  @@index([storeId])
+  @@index([categoryId])
+}
+
+model CategoryProduct {
+  categoryId String
+  productId  String
+  createdAt  DateTime @default(now())
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, productId])
+  @@index([productId])
+}
+
+model SubcategoryProduct {
+  subcategoryId String
+  productId     String
+  createdAt     DateTime @default(now())
+
+  // Relations
+  subcategory Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([subcategoryId, productId])
+  @@index([productId])
+}
+
+model Collection {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.Text
+  slug        String   @unique
+  imageUrl    String
+  isActive    Boolean  @default(true)
+  startDate   DateTime
+  endDate     DateTime
+  storeId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  store    Store               @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products CollectionProduct[]
+
+  @@index([storeId])
+}
+
+model CollectionProduct {
+  collectionId String
+  productId    String
+  createdAt    DateTime @default(now())
+
+  // Relations
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, productId])
+  @@index([productId])
+}
+
+model Brand {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.Text
+  slug        String   @unique
+  logoUrl     String
+  websiteUrl  String
+  isActive    Boolean  @default(true)
+  storeId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products Product[]
+
+  @@index([storeId])
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  rating        Int
+  title         String
+  content       String   @db.Text
+  status        String   @default("pending") // pending, approved, rejected
+  productId     String
+  customerId    String
+  customerName  String
+  customerEmail String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  product  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([productId])
+  @@index([customerId])
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  password  String // Hashed password if applicable
+  isGuest   Boolean  @default(false)
+  storeId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  addresses Address[]
+  orders    Order[]
+  reviews   Review[]
+
+  @@index([storeId])
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  type       String   @default("shipping") // shipping, billing
+  firstName  String
+  lastName   String
+  company    String
+  address1   String
+  address2   String
+  city       String
+  state      String
+  postalCode String
+  country    String
+  phone      String
+  isDefault  Boolean  @default(false)
+  customerId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  orderNumber     String   @unique
+  status          String   @default("pending") // pending, processing, completed, cancelled, refunded
+  subtotal        Float
+  tax             Float    @default(0)
+  shipping        Float    @default(0)
+  discount        Float    @default(0)
+  total           Float
+  currency        String   @default("USD")
+  paymentMethod   String
+  paymentStatus   String   @default("pending") // pending, paid, failed
+  shippingMethod  String
+  shippingAddress String   @db.Text // Stored as JSON string
+  billingAddress  String   @db.Text // Stored as JSON string
+  customerNotes   String   @db.Text
+  adminNotes      String   @db.Text
+  customerId      String
+  storeId         String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  store    Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customer Customer?   @relation(fields: [customerId], references: [id])
+  items    OrderItem[]
+
+  @@index([storeId])
+  @@index([customerId])
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  quantity  Int
+  price     Float
+  subtotal  Float
+  tax       Float    @default(0)
+  discount  Float    @default(0)
+  total     Float
+  options   String   @db.Text // Stored as JSON string
+  productId String
+  variantId String
+  orderId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Coupon {
+  id            String   @id @default(uuid())
+  code          String   @unique
+  description   String   @db.Text
+  discountType  String   @default("percentage") // percentage, fixed
+  discountValue Float
+  minimumSpend  Float
+  maximumSpend  Float
+  usageLimit    Int
+  usageCount    Int      @default(0)
+  isActive      Boolean  @default(true)
+  startDate     DateTime
+  endDate       DateTime
+  storeId       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ShippingZone {
+  id          String   @id @default(uuid())
+  name        String
+  countries   String   @db.Text // Stored as JSON string
+  regions     String   @db.Text // Stored as JSON string
+  postalCodes String   @db.Text // Stored as JSON string
+  methods     String   @db.Text // Stored as JSON string
+  storeId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TaxRate {
+  id         String   @id @default(uuid())
+  name       String
+  rate       Float
+  country    String
+  state      String
+  postalCode String
+  city       String
+  priority   Int      @default(0)
+  compound   Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  storeId    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model PaymentMethod {
+  id           String   @id @default(uuid())
+  name         String
+  description  String   @db.Text
+  instructions String   @db.Text
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  storeId      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ShippingMethod {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.Text
+  cost        Float
+  freeAbove   Float
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  storeId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StoreSettings {
+  id                  String   @id @default(uuid())
+  storeId             String   @unique
+  currency            String   @default("INR")
+  weightUnit          String   @default("kg")
+  dimensionUnit       String   @default("cm")
+  orderPrefix         String   @default("ORD-")
+  invoicePrefix       String   @default("INV-")
+  taxIncluded         Boolean  @default(false)
+  enableReviews       Boolean  @default(true)
+  enableGuestCheckout Boolean  @default(true)
+  enableWishlist      Boolean  @default(true)
+  enableComparisons   Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
