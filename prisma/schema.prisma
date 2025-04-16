@@ -59,21 +59,23 @@ model Plan {
 }
 
 model Subscription {
-  id                 String    @id @default(uuid())
-  storeId            String    @unique
-  planId             String
-  status             String    @default("active") // active, canceled, past_due, trialing, unpaid
-  currentPeriodStart DateTime
-  currentPeriodEnd   DateTime
-  cancelAtPeriodEnd  Boolean   @default(false)
-  canceledAt         DateTime?
-  trialStart         DateTime?
-  trialEnd           DateTime?
-  customerId         String // Customer ID in payment provider (Stripe, etc.)
-  subscriptionId     String? // Subscription ID in payment provider
-  paymentMethodId    String? // Payment method ID in payment provider
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  id                     String    @id @default(uuid())
+  storeId                String    @unique
+  planId                 String
+  status                 String    @default("active") // active, canceled, past_due, trialing, unpaid
+  razorpaySubscriptionId String?
+  razorpayCustomerId     String?
+  currentPeriodStart     DateTime
+  currentPeriodEnd       DateTime
+  cancelAtPeriodEnd      Boolean   @default(false)
+  canceledAt             DateTime?
+  trialStart             DateTime?
+  trialEnd               DateTime?
+  customerId             String // Customer ID in payment provider (Stripe, etc.)
+  subscriptionId         String? // Subscription ID in payment provider
+  paymentMethodId        String? // Payment method ID in payment provider
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 
   // Relations
   store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)

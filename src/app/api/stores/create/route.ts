@@ -1,170 +1,75 @@
 import prismadb from "@/lib/db/prismadb";
+import { getRazorpayClient } from "@/lib/razorpay/razorpay-client";
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
-import Razorpay from 'razorpay';
+import { NextRequest, NextResponse } from "next/server";
 
-const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
-
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID!,
-    key_secret: process.env.RAZORPAY_KEY_SECRET!,
-})
-
-export async function OPTIONS() {
-    return NextResponse.json({}, { headers: corsHeaders });
-}
-
-const razorpayPlans: Record<string, string> = {
+const razorpayPlan: Record<string, string> = {
     starter: "plan_QIUoIRTZ8NEvBW",
     professional: "plan_QIUoiY2A4XbJGL",
-    enterprise: "plan_QIUp1YL3B27B57",
+    free: "plan_free"
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
 
     try {
 
         const { userId } = await auth();
         if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
-        const body = await req.json();
-        const {
-            name,
-            description,
-            subscriptionPlan
-        } = body;
+        const body = await req.json()
+        const { name, description, subscriptionPlan } = body
 
-        if (!name) return new NextResponse("Name is required", { status: 401 });
-        if (!subscriptionPlan) return new NextResponse("SubscriptionPlan is required", { status: 401 });
+        if (!name || !subscriptionPlan) return new NextResponse("Name and Subscription plan is required", { status: 400 });
 
-        const razorpayPlanId = razorpayPlans[subscriptionPlan]
-        if (!razorpayPlanId) {
-            return new NextResponse("Invalid subscription plan", { status: 400 })
-        }
+        let razorpay_plan_id = razorpayPlan[subscriptionPlan]
 
-        const slug = name
-            .toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^a-z0-9-]/g, "");
+        const plan = await prismadb.plan.findFirst({
+            where: {
+                razorpayPlanId: razorpay_plan_id,
+                isActive: true,
+            },
+        })
 
-        const existingStore = await prismadb.store.findUnique({
-            where: { slug },
-        });
-
-        if (existingStore) {
-            return NextResponse.json(
-                { error: "Store name already taken" },
-                { status: 400 }
-            );
-        }
-
-        const plan = await prismadb.plan.findUnique({
-            where: { razorpayPlanId: razorpayPlanId },
-        });
-
-        if (!plan) {
-            return NextResponse.json(
-                { error: "Selected plan not found" },
-                { status: 400 }
-            );
-        };
-
-        const userEmail = "user333@example.com";
-        const userName = "Store333 Owner";
-        const userPhone = "1223667890";
-
-        let razorpayCustomer;
-        try {
-            razorpayCustomer = await razorpay.customers.create({
-                name: userName,
-                email: userEmail,
-                contact: userPhone,
-                notes: {
-                    userId: userId
-                }
-            });
-        } catch (error) {
-            console.error("Error creating Razorpay customer:", error);
-            return NextResponse.json(
-                { error: "Failed to create payment information" },
-                { status: 500 }
-            );
-        }
-
-        const now = new Date();
-        const trialEnd = plan.trialDays > 0
-            ? new Date(now.getTime() + plan.trialDays * 24 * 60 * 60 * 1000)
-            : null;
-
-        const currentPeriodEnd = new Date(
-            now.getTime() + (plan.billingInterval === "month" ? 30 : 365) * 24 * 60 * 60 * 1000
-        );
+        if (!plan) return NextResponse.json({ error: "Invalid subscription plan" }, { status: 400 })
 
         const store = await prismadb.store.create({
             data: {
-                userId: userId,
                 name: name,
-                slug: slug,
-                isActive: true,
+                description: description ? description : "",
+                userId: userId,
+                storageUsed: 0,
+                isActive: false,
             }
-        });
+        })
 
-        await prismadb.storeSettings.create({
-            data: {
-                storeId: store.id,
-            }
-        });
+        const user = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+            },
+        }).then((res) => res.json())
 
-        await prismadb.subscription.create({
-            data: {
-                storeId: store.id,
-                planId: plan.id,
-                status: plan.trialDays > 0 ? "trialing" : "active",
-                currentPeriodStart: now,
-                currentPeriodEnd,
-                trialStart: plan.trialDays > 0 ? now : null,
-                trialEnd,
-                customerId: razorpayCustomer.id,
-            }
-        });
+        const razorpay = getRazorpayClient()
 
-        await prismadb.staffMember.create({
-            data: {
-                storeId: store.id,
-                email: userEmail,
-                name: userName,
-                role: "owner",
-                permissions: JSON.stringify(["all"]),
-            }
-        });
-
-        const razorpayOrder = await razorpay.orders.create({
-            amount: plan.price * 100,
-            currency: "INR",
-            receipt: `store_${store.slug}`,
-            notes: {
-                storeId: store.id,
-                planId: plan.razorpayPlanId,
-                userId: userId
-            }
+        const razorpaySubscriptions = await razorpay.subscriptions.create({
+            plan_id: plan.razorpayPlanId!,
+            customer_notify: 1,
+            total_count: 12,
         });
 
         return NextResponse.json({
             store,
-            payment: {
-                orderId: razorpayOrder.id,
-                amount: razorpayOrder.amount,
-                currency: razorpayOrder.currency,
-            }
-        });
+            user: {
+                user_id: userId,
+                user_name: user.first_name + " " + user.last_name,
+                user_email: user.email_addresses[0].email_address,
+                user_phone: user.phone_numbers?.[0]?.phone_number || "",
+            },
+            razorpaySubscriptions,
+        })
 
     } catch (error) {
-        console.error("STORE_POST", error)
-        return new NextResponse("Internal Error", { status: 500 });
+        console.error("Error creating store:", error)
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 
 }

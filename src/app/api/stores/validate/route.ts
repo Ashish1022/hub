@@ -1,110 +1,46 @@
-// import prismadb from "@/lib/db/prismadb";
-// import { NextResponse } from "next/server";
-// import Razorpay from "razorpay";
+import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
+import crypto from 'crypto';
+import prismadb from "@/lib/db/prismadb";
+import { SubscriptionService } from "@/lib/services/subscription-service";
 
-// const corsHeaders = {
-//     "Access-Control-Allow-Origin": "*",
-//     "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-//     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-// };
+export async function POST(req: NextRequest) {
+    try {
 
-// const razorpay = new Razorpay({
-//     key_id: process.env.RAZORPAY_KEY_ID!,
-//     key_secret: process.env.RAZORPAY_KEY_SECRET!,
-// })
+        const { userId } = await auth();
+        if (!userId) return new NextResponse("Unauthorized", { status: 500 });
 
-// export async function OPTIONS() {
-//     return NextResponse.json({}, { headers: corsHeaders });
-// }
+        const body = await req.json()
+        const { razorpay_payment_id, razorpay_subscription_id, razorpay_signature, razorpay_plan_id, storeId } = body
 
-// export async function POST(req: Request) {
-//     try {
-//         const body = await req.json();
-//         const {
-//             razorpay_payment_id,
-//             razorpay_order_id,
-//             razorpay_signature,
-//             storeId,
-//             planId
-//         } = body;
-//         const generatedSignature = crypto
-//             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
-//             .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-//             .digest("hex");
-//         if (generatedSignature !== razorpay_signature) {
-//             return NextResponse.json(
-//                 { error: "Invalid payment signature" },
-//                 { status: 400 }
-//             );
-//         }
-//         const payment = await razorpay.payments.fetch(razorpay_payment_id);
-//         const subscription = await prismadb.subscription.findFirst({
-//             where: { storeId },
-//             include: { plan: true }
-//         });
-//         if (!subscription) {
-//             return NextResponse.json(
-//                 { error: "Subscription not found" },
-//                 { status: 404 }
-//             );
-//         }
-//         let razorpaySubscription;
-//         const plan = await prisma.plan.findUnique({ where: { id: planId } });
-//         const razorpayPlanId = plan?.billingInterval === "month"
-//             ? "plan_monthly_id_from_razorpay"
-//             : "plan_yearly_id_from_razorpay";
-//         try {
-//             razorpaySubscription = await razorpay.subscriptions.create({
-//                 plan_id: razorpayPlanId,
-//                 customer_notify: 1,
-//                 total_count: 12,
-//                 customer_id: subscription.customerId,
-//                 notes: {
-//                     storeId: storeId,
-//                     planId: planId
-//                 }
-//             });
-//         } catch (error) {
-//             console.error("Failed to create Razorpay subscription:", error);
-//         }
-//         await prismadb.subscription.update({
-//             where: { id: subscription.id },
-//             data: {
-//                 status: "active",
-//                 subscriptionId: razorpaySubscription?.id || null,
-//             }
-//         });
-//         await prismadb.invoice.create({
-//             data: {
-//                 subscriptionId: subscription.id,
-//                 invoiceNumber: `INV-${Date.now()}`,
-//                 amount: payment.amount.toString(), 
-//                 status: "paid",
-//                 currency: payment.currency || "INR",
-//                 invoiceDate: new Date(),
-//                 dueDate: new Date(),
-//                 paidDate: new Date(),
-//                 billingAddress: JSON.stringify({}), // You would get this from the user during checkout
-//                 paymentMethod: "razorpay",
-//                 paymentProviderId: razorpay_payment_id,
-//             }
-//         });
+        const generatedSignature = crypto
+            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+            .update(`${razorpay_payment_id}|${razorpay_subscription_id}`)
+            .digest("hex")
 
-//         // Update store status to active
-//         await prismadb.store.update({
-//             where: { id: storeId },
-//             data: { isActive: true }
-//         });
+        if (generatedSignature !== razorpay_signature) return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
 
-//         return NextResponse.json({
-//             success: true,
-//             message: "Payment verified and subscription activated"
-//         });
-//     } catch (error) {
-//         console.error("[PAYMENT_VERIFY]", error);
-//         return NextResponse.json(
-//             { error: "Internal server error" },
-//             { status: 500 }
-//         );
-//     }
-// }
+        const plan = await prismadb.plan.findFirst({
+            where: {
+                razorpayPlanId: razorpay_plan_id,
+            },
+        });
+
+        if (!plan) return NextResponse.json({ error: "Invalid plan" }, { status: 400 })
+
+        await SubscriptionService.createSubscription(storeId, plan.id)
+
+        await prismadb.store.update({
+            where: { id: storeId },
+            data: {
+                isActive: true,
+            },
+        })
+
+        return NextResponse.json({ msg: "success" })
+
+    } catch (error) {
+        console.error("Error validating payment:", error)
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    }
+}

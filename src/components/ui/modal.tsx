@@ -34,7 +34,7 @@ const Modal = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onChange}>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[650px] p-0 overflow-hidden border-0">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>
